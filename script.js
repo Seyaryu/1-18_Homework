@@ -63,7 +63,7 @@ var day = [
 ]
 
 function refreshSaves() {
-    var savedDay = JSON.parse(localStorage.getItem(day));
+    var savedDay = JSON.parse(localStorage.getItem('day'));
 
     if(savedDay) {
         day = savedDay;
@@ -87,9 +87,9 @@ for (var i= 0; i < day.length; i++) {
     var noteArea = $('<div>');
     noteArea.attr({'class': 'col-md-7 description p-0'});
 
-    var noteInput = $('<textarea>');
-    noteInput.attr({'id': day[i].hour + day[i].ampm});
-    noteInput.textContent = day[i].note
+    var noteInput = $('<textarea>')
+        .attr({'id': day[i].hour + day[i].ampm});
+    noteInput.val(day[i].note);
 
     noteArea.append(noteInput);
     row.append(noteArea);
@@ -98,6 +98,9 @@ for (var i= 0; i < day.length; i++) {
         .text("📂")
         .attr({'class': 'saveBtn'})
     row.append(saveBtn);
+
+    var saveText = $('<p>')
+        .attr({'class': 'saveText'});
 
     if (now  - 7> i) {
         noteInput.attr({'class': 'past col-md m-0'})
@@ -111,9 +114,8 @@ for (var i= 0; i < day.length; i++) {
 $('.saveBtn').on('click', function(event){
     event.preventDefault();
     
-    console.log($(this).siblings('.description').val());
     var saveItem = $(this).parent().index();
-    day[saveItem].note = $(this).siblings('.description').val();
-
+    day[saveItem].note = $(this).siblings($('div')).children('textarea').val();
+    $(this).siblings('p').css('visibility', 'visible');
     localStorage.setItem("day", JSON.stringify(day));
 })
